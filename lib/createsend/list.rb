@@ -4,10 +4,11 @@ require 'json'
 module CreateSend
   # Represents a subscriber list and associated functionality.
   class List
-    attr_reader :list_id
+    attr_reader :list_id, :api_key
 
-    def initialize(list_id)
+    def initialize(list_id, api_key = nil)
       @list_id = list_id
+      @api_key = api_key
     end
 
     # Creates a new list for a client.
@@ -24,13 +25,14 @@ module CreateSend
     #   "OnlyThisList". See the documentation for details:
     #   http://www.campaignmonitor.com/api/lists/#creating_a_list
     def self.create(client_id, title, unsubscribe_page, confirmed_opt_in,
-      confirmation_success_page, unsubscribe_setting="AllClientLists")
+      confirmation_success_page, api_key, unsubscribe_setting="AllClientLists")
       options = { :body => {
         :Title => title,
         :UnsubscribePage => unsubscribe_page,
         :ConfirmedOptIn => confirmed_opt_in,
         :ConfirmationSuccessPage => confirmation_success_page,
         :UnsubscribeSetting => unsubscribe_setting }.to_json }
+      CreateSend.api_key(api_key)
       response = CreateSend.post "/lists/#{client_id}.json", options
       response.parsed_response
     end

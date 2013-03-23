@@ -4,20 +4,20 @@ require 'json'
 module CreateSend
   # Represents a client and associated functionality.
   class Client
-    attr_reader :client_id
+    attr_reader :client_id, :api_key
 
-    def initialize(client_id, api_key)
-      CreateSend.api_key(api_key)
+    def initialize(client_id, api_key = nil)
+      @api_key   = api_key
       @client_id = client_id
     end
 
     # Creates a client.
     def self.create(company, timezone, country, api_key)
-      CreateSend.api_key(api_key)
       options = { :body => {
         :CompanyName => company,
         :TimeZone => timezone,
         :Country => country }.to_json }
+      CreateSend.api_key(api_key)
       CreateSend.post "/clients.json", options
     end
 
@@ -137,6 +137,7 @@ module CreateSend
         :MarkupOnDelivery => markup_on_delivery,
         :MarkupPerRecipient => markup_per_recipient,
         :MarkupOnDesignSpamTest => markup_on_design_spam_test }.to_json }
+      CreateSend.api_key(api_key)
       put 'setpaygbilling', options
     end
 
@@ -149,6 +150,7 @@ module CreateSend
         :ClientPays => client_pays,
         :MarkupPercentage => markup_percentage,
         :MonthlyScheme => monthly_scheme }.to_json }
+      CreateSend.api_key(api_key)
       put 'setmonthlybilling', options
     end
 

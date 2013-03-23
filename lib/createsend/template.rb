@@ -4,18 +4,20 @@ require 'json'
 module CreateSend
   # Represents an email template and associated functionality.
   class Template
-    attr_reader :template_id
+    attr_reader :template_id, :api_key
 
-    def initialize(template_id)
+    def initialize(template_id, api_key = api_key)
       @template_id = template_id
+      @api_key     = api_key
     end
 
     # Creates a new email template.
-    def self.create(client_id, name, html_url, zip_url)
+    def self.create(client_id, name, html_url, zip_url, api_key)
       options = { :body => {
         :Name => name,
         :HtmlPageURL => html_url,
         :ZipFileURL => zip_url }.to_json }
+      CreateSend.api_key(api_key)
       response = CreateSend.post "/templates/#{client_id}.json", options
       response.parsed_response
     end
