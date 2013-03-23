@@ -6,12 +6,14 @@ module CreateSend
   class Client
     attr_reader :client_id
 
-    def initialize(client_id)
+    def initialize(client_id, api_key)
+      CreateSend.api_key(api_key)
       @client_id = client_id
     end
 
     # Creates a client.
-    def self.create(company, timezone, country)
+    def self.create(company, timezone, country, api_key)
+      CreateSend.api_key(api_key)
       options = { :body => {
         :CompanyName => company,
         :TimeZone => timezone,

@@ -71,19 +71,16 @@ module CreateSend
     end
     parser Parser::DealWithCreateSendInvalidJson
     @@base_uri = "https://api.createsend.com/api/v3"
-    @@api_key = ""
     headers({
       'User-Agent' => "createsend-ruby-#{VERSION}",
       'Content-Type' => 'application/json; charset=utf-8',
       'Accept-Encoding' => 'gzip, deflate' })
     base_uri @@base_uri
-    basic_auth @@api_key, 'x'
 
     # Sets the API key which will be used to make calls to the CreateSend API.
     def self.api_key(api_key=nil)
-      return @@api_key unless api_key
-      @@api_key = api_key
-      basic_auth @@api_key, 'x'
+      return false unless api_key
+      basic_auth api_key, 'x'
     end
 
     # Gets your CreateSend API key, given your site url, username and password.
@@ -91,8 +88,6 @@ module CreateSend
       site_url = CGI.escape(site_url)
       self.class.basic_auth username, password
       response = CreateSend.get("/apikey.json?SiteUrl=#{site_url}")
-      # Revert basic_auth to use @@api_key, 'x'
-      self.class.basic_auth @@api_key, 'x'
       Hashie::Mash.new(response)
     end
 
