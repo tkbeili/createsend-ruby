@@ -183,6 +183,7 @@ module CreateSend
 
     # Deletes this client.
     def delete
+      CreateSend.api_key(api_key)
       CreateSend.delete "/clients/#{client_id}.json", {}
     end
 
